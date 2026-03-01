@@ -1,0 +1,13 @@
+# Secrets et Variables
+.env
+*.pem
+*.key
+secrets.txt
+
+# Azure CLI / Logs
+.azure/
+*.log
+*.tmp
+
+# OS spécifiques
+.DS_Store
