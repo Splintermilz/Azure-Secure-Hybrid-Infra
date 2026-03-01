@@ -17,11 +17,11 @@ J'ai opté pour une approche "Zero Waste" (512 IP), équilibre idéal entre éco
 
 **Ressource Nom	Adresse/Région	Rôle**
 
-Region	belgiumcentral	Bruxelles	Souveraineté & Latence
-VNet	VNET-CORE	10.0.0.0/23	Enveloppe PME (512 IP)
-Subnet Mgmt	Subnet-Management	10.0.0.0/27	Administration - accès unique via RDP lié dynamiquement à mon adresse IP
-Subnet Id	Subnet-Identity	10.0.0.32/27	Coeur Infra : 2 DC (Haute disponibilité), AD DS, DNS intégré & Entra Connect
-Subnet Data	Subnet-Data	10.0.1.0/24	Zone Métier : Segment pour les 150 collaborateurs (RH, Finance, IT, Sales).
+<br>Region	belgiumcentral	Bruxelles	Souveraineté & Latence</br>
+<br>VNet	VNET-CORE	10.0.0.0/23	Enveloppe PME (512 IP)</br>
+<br>Subnet Mgmt	Subnet-Management	10.0.0.0/27	Administration - accès unique via RDP lié dynamiquement à mon adresse IP</br>
+<br>Subnet Id	Subnet-Identity	10.0.0.32/27	Coeur Infra : 2 DC (Haute disponibilité), AD DS, DNS intégré & Entra Connect</br>
+<br>Subnet Data	Subnet-Data	10.0.1.0/24	Zone Métier : Segment pour les 150 collaborateurs (RH, Finance, IT, Sales).</br>
 
 
 
@@ -32,16 +32,16 @@ Subnet Data	Subnet-Data	10.0.1.0/24	Zone Métier : Segment pour les 150 collabor
 
 
 
-**Roadmap de Déploiement (Sprint 15 Jours - (cqfd les crédits azure étudiant)**
+**Roadmap de Déploiement (Sprint de 15 Jours  (cqfd les crédits azure étudiant))**
 
 📂 Phase 1 : Network Foundation (✅)
 * Provisionnement du VNet et des subnets segmentés.
 * Sécurisation  via NSG (Network Security Groups).
-* 
+  
 📂 Phase 2 : Identity & Hybrid Management ( 🔄)
 * Déploiement du premier contrôleur de domaine sur Windows Server 2025 Core.
 * Configuration de l'AD DS, du DNS interne et préparation du lien Microsoft Entra ID.
-* 
+  
 📂 Phase 3 : System Hardening (⏳)
 * Application de GPO de sécurité et durcissement des OS.
 * Mise en place du RBAC (Role-Based Access Control).
