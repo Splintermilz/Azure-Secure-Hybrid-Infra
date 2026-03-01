@@ -16,8 +16,8 @@ J'ai opté pour une approche "Zero Waste" (512 IP), équilibre idéal entre éco
 
 
 **Ressource Nom	Adresse/Région	Rôle**
-
 <br>Region	belgiumcentral	Bruxelles	Souveraineté & Latence</br>
+
 <br>VNet	VNET-CORE	10.0.0.0/23	Enveloppe PME (512 IP)</br>
 <br>Subnet Mgmt	Subnet-Management	10.0.0.0/27	Administration - accès unique via RDP lié dynamiquement à mon adresse IP</br>
 <br>Subnet Id	Subnet-Identity	10.0.0.32/27	Coeur Infra : 2 DC (Haute disponibilité), AD DS, DNS intégré & Entra Connect</br>
