@@ -13,7 +13,7 @@
 
 
 ## **2. Stratégie d'Adressage**
-J’ai délibérément rejeté le standard /16 (65 536 IP) pour une approche "Zero Waste" adaptée à une PME de 100-150 employés.
+J'ai opté pour une approche "Zero Waste" (512 IP), équilibre idéal entre économie de ressources et capacité d'évolution.
 
 * ***VNet Global (/23) :*** 512 adresses au total. C'est l'équilibre parfait entre économie de ressources et capacité d'évolution, le /24 étant moins intéressant pour ce dernier point.
 
