@@ -1,3 +1,4 @@
+#!/bin/bash
 # =====================================================================
 # SCRIPT: 02-deploy-identity-vm.sh
 # DESCRIPTION: Provisioning the first domain controller (DC) via Azure CLI
