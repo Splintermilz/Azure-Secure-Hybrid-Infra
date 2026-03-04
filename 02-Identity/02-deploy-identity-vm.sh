@@ -13,7 +13,7 @@ else
     exit 1
 fi
 
-# ---  Check if required environment variables are set ---
+## Check if required environment variables are set 
 required_vars=("VM_ADMIN" "VM_PASS" "ADMIN_MAIL")
 for var in "${required_vars[@]}"; do
     if [ -z ${!var} ]; then
@@ -49,8 +49,7 @@ az vm create \
   --public-ip-address "" \
   --storage-sku StandardSSD_LRS
 
-
-
+## Check if required environment variables are set 
 if [ $? -eq 0 ]; then
     echo "-------------------------------------------------------"
     echo "SUCCESS: VM $VM_NAME is created !"
@@ -72,6 +71,8 @@ az vm auto-shutdown \
   --location $LOC \
   --email $ADMIN_MAIL # To receive an auto-shutdown confirmation email
 
+
+# Check if Auto-shutdown is enabled or not
 if [ $? -eq 0 ]; then
     echo "-------------------------------------------------------"
     echo "SUCCESS: Auto-shutdown is enabled."
