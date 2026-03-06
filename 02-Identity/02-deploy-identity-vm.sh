@@ -6,8 +6,11 @@
 # =====================================================================
 #
 # 1. Set up .env to dynamically retrieve the VM_ADMIN, VM_PASS and AMDIN_MAIL variables
-if [ -f .env ]; then
-    	source .env
+
+ENV_FILE="$(dirname "$0")/../.env"
+
+if [ -f $ENV_FILE ]; then
+    	source $ENV_FILE
 else
     echo "Error : Missing .env"
     exit 1
@@ -22,21 +25,24 @@ for var in "${required_vars[@]}"; do
     fi
 done
 
-
 # --- Variables ---
 RG="RG-LAB-HYBRID-INFRA"
-LOC="belgiumcentral"
+LOC="francecentral"
 VM_NAME="SRV-AD-01"
 VNET="VNET-CORE"
 SUBNET="Subnet-Identity"
-
+CHECK_VM=$(az vm list -g $RG --query "[?name=='$VM_NAME'].name" -o tsv)
 trap 'echo "Deployment failed. Check Azure connection."; exit 1' ERR
 
 echo "Deployment of the VM identity : $VM_NAME ..."
 
+
 # 2. VM creation  (Hardened)
 # Why : Absence of a public IP address  for isolation from the internet and prevents scans
 # Image : Datacenter-Azure-Edition-Core for Hotpatching
+# CHEK_VM : makes idempotent VM creation 
+if [ -z "$CHECK_VM" ]; then
+	echo "VM $VM_NAME do not exist yet. Starting deployment ..."
 az vm create \
   --resource-group $RG \
   --name $VM_NAME \
@@ -45,20 +51,22 @@ az vm create \
   --subnet $SUBNET \
   --admin-username $VM_ADMIN \
   --admin-password $VM_PASS \
-  --size Standard_B2s \
+  --size Standard_D2s_v3 \
   --public-ip-address "" \
   --storage-sku StandardSSD_LRS
 
-
-
-if [ $? -eq 0 ]; then
-    echo "-------------------------------------------------------"
-    echo "SUCCESS: VM $VM_NAME is created !"
-    echo "-------------------------------------------------------"
+    if [ $? -eq 0 ]; then
+        echo "-------------------------------------------------------"
+        echo "SUCCESS: VM $VM_NAME is created !"
+        echo "-------------------------------------------------------"
+    else
+        echo "Error: VM $VM_NAME creation failed. Stopping script."
+        exit 1
+    fi
 else
-    echo "Error: VM creation failed. Stopping script."
-    exit 1
+    echo "VM $VM_NAME already exists. Skipping creation."
 fi
+
 
 
 # 3. FinOps : Auto-shutdown at 7pm
