@@ -39,7 +39,7 @@ az network nsg create --resource-group $RG --name "NSG-MGMT-ADMIN"
 
 
 # 3. Security Rule: Restrict RDP access
-# Why: Ports like 3389 (RDP) are highly targeted  
+# Why: Ports like 3389 (RDP) are highly targeted
 # How: Add only my current public IP ($MY_IP).
 az network nsg rule create \
   --resource-group $RG \
@@ -79,7 +79,7 @@ az network vnet subnet create \
   --name "Subnet-Data" \
   --address-prefix 10.0.1.0/24 \
   --resource-group $RG \
-  --vnet-name $VNET_NAME 
+  --vnet-name $VNET_NAME
 
 
 echo "-------------------------------------------------------"
