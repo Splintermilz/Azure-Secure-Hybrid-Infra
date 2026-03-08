@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # =====================================================================
 # SCRIPT: 01-deploy-network.sh
 # DESCRIPTION: Deploys the core Azure networking infrastructure.
