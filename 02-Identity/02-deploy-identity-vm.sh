@@ -69,21 +69,3 @@ fi
 
 
 
-# 3. FinOps : Auto-shutdown at 7pm
-# Why : Azure credit economy / FinOps mindset
-echo "Configuration of auto-shutdown at 7pm (Brussels Time)..."
-
-az vm auto-shutdown \
-  --resource-group $RG \
-  --name $VM_NAME \
-  --time 1900 \
-  --location $LOC \
-  --email $ADMIN_MAIL # To receive an auto-shutdown confirmation email
-
-if [ $? -eq 0 ]; then
-    echo "-------------------------------------------------------"
-    echo "SUCCESS: Auto-shutdown is enabled."
-    echo "-------------------------------------------------------"
-else
-    echo "Error: VM created, but Auto-shutdown configuration failed."
-fi
