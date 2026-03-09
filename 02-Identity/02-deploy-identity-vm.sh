@@ -27,7 +27,7 @@ done
 
 # --- Variables ---
 RG="RG-LAB-HYBRID-INFRA"
-LOC="francecentral"
+LOC="belgiumcentral"
 VM_NAME="SRV-AD-01"
 VNET="VNET-CORE"
 SUBNET="Subnet-Identity"
