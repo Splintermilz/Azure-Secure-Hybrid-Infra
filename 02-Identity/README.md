@@ -79,7 +79,6 @@ Le groupe de sécurité SRV-AD-01 NSG est configuré pour restreindre les flux:
 
 
 ✅ État d'avancement
-* [x] Segmentation VLSM du VNet effectuée.  
 * [x] Provisioning de SRV-AD-01 fonctionnel (IP privée : 10.0.0.36).  
 * [ ] Promotion du domaine pme150.local (Prochaine étape).
 
