@@ -26,6 +26,29 @@ J'ai opté pour une approche "Zero Waste" (512 IP), équilibre idéal entre éco
 				  De plus, cela permet d’isoler le traffic de données du trafic de gestion (management).
 
 
+
+* ### 🔄 Update : Segmentation Métier Dynamique
+
+Afin de concrétiser cette réflexion, j'ai procédé à un **refactoring dynamique** du réseau via mon script `01-subnet-segmentation.sh`. L'idée est de passer d'un bloc monolithique à une isolation granulaire.
+
+#### Implémentation technique (CIDR /26)
+J'ai découpé le bloc initial `10.0.1.0/24` en **4 segments distincts** de 64 adresses chacun :
+
+* **Subnet-IT** (`10.0.1.0/26`) : Zone prioritaire pour l'administration et le futur déploiement du SIEM (Wazuh).
+* **Subnet-SALES** (`10.0.1.64/26`) : Isolation des flux commerciaux.
+* **Subnet-RH** (`10.0.1.128/26`) : Protection des données sensibles du personnel.
+* **Subnet-FINANCE** (`10.0.1.192/26`) : Zone critique pour les flux comptables.
+
+#### Bénéfices immédiats
+1.  **Sécurité (Zero-Trust)** : Chaque département est confiné dans son propre segment, limitant la surface d'attaque latérale en cas de compromission d'une station.
+2.  **Héritage DNS** : Grâce à l'update global du VNet, chaque nouveau subnet pointe automatiquement vers mon contrôleur de domaine `SRV-AD-01` (`10.0.0.36`) pour la résolution de noms.
+3.  **Auditabilité** : La stack SIEM pourra monitorer les flux de manière beaucoup plus précise en identifiant la source du trafic par son subnet métier.
+
+> [!TIP]
+> **Vérification du déploiement :** > On peut valider la création des subnets avec la commande suivante :  
+> `az network vnet subnet list -g RG-LAB-HYBRID-INFRA --vnet-name VNET-CORE -o table`
+
+
 <br>
 ---
 <br>
