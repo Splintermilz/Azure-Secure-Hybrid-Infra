@@ -18,8 +18,18 @@ J'ai opté pour une approche "Zero Waste" (512 IP), équilibre idéal entre éco
 * ***VNet Global (/23) :*** 512 adresses au total. C'est l'équilibre parfait entre économie de ressources et capacité d'évolution, le /24 étant moins intéressant pour ce dernier point.
 
 * ***Segmentation Technique (/27) :*** Pour Management et Identity.
-    * *Réflexion :* J’ai évité le /28 (trop risqué à cause des 5 IP réservées par Azure) pour le /27 (27 IP utilisables). Cela permet la haute disponibilité (2 contrôleurs de domaine) et les mises à jour sans asphyxie réseau.
-    * *Réflexion :* Le choix de fusionner AD DS et DNS sur le même hôte permet de réduire la surface d'attaque et de simplifier la résolution de noms interne, tout en garantissant une réplication native des zones DNS via l'Active Directory.
+    * *Réflexion :* Le choix du /27 (27 IP utilisables) sécurise l'évolution. Bien que l'infrastructure actuelle repose sur un contrôleur de domaine unique (SRV-AD-01), ce découpage permet d'accueillir immédiatement un second nœud pour la Haute Disponibilité (HA) sans reconfiguration réseau.
+
+    * *Réflexion :* La fusion des rôles AD DS et DNS sur le même hôte simplifie la résolution de noms interne, tout en garantissant une réplication native des zones via l'Active Directory.
+
+
+
+[!IMPORTANT]
+Arbitrage de Phase 2 : L'infrastructure est configurée en "HA-Ready". Suite à des instabilités d'agent Azure lors de la promotion du second nœud, la décision a été prise de maintenir un contrôleur de domaine unique (10.0.0.36) pour valider la Phase 3. Cette approche privilégie l'agilité et le respect des délais du projet (MVP - Minimum Viable Product).
+
+
+
+
 
 * ***Segmentation Métier (/24) :*** Pour le sous-réseau Data.
     * *Réflexion :* Un bloc entier pour les départements (RH, Finance, IT, Sales) afin de garder une lisibilité parfaite (10.0.1.x) et d'accueillir des potentiels futurs collaborateurs.
