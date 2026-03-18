@@ -18,7 +18,7 @@ J'ai opté pour une approche "Zero Waste" (512 IP), équilibre idéal entre éco
 * ***VNet Global (/23) :*** 512 adresses au total. C'est l'équilibre parfait entre économie de ressources et capacité d'évolution, le /24 étant moins intéressant pour ce dernier point.
 
 * ***Segmentation Technique (/27) :*** Pour Management et Identity.
-    * *Réflexion :* Le choix du /27 (27 IP utilisables) sécurise l'évolution. Bien que l'infrastructure actuelle repose sur un contrôleur de domaine unique (SRV-AD-01), ce découpage permet d'accueillir immédiatement un second nœud pour la Haute Disponibilité (HA) sans reconfiguration réseau.
+    * *Réflexion :* Le choix du /27 sécurise l'évolution. Bien que l'infrastructure actuelle repose sur un contrôleur de domaine unique (SRV-AD-01), ce découpage permet d'accueillir immédiatement un second nœud pour la Haute Disponibilité (HA) sans reconfiguration réseau.
 
     * *Réflexion :* La fusion des rôles AD DS et DNS sur le même hôte simplifie la résolution de noms interne, tout en garantissant une réplication native des zones via l'Active Directory.
 
