@@ -1,4 +1,4 @@
-# 🗂️ README — 03-Hardening
+#  README — 03-Hardening
 
 ---
 
@@ -122,7 +122,7 @@ az vm run-command invoke \
 
 ---
 
-## ✅ État d'avancement — Bilan final Étape 3
+##  État d'avancement — Bilan final Étape 3
 
 | Composant | État | Détail |
 |---|---|---|
@@ -139,3 +139,14 @@ az vm run-command invoke \
 | Entra ID Connect | ⏳ HORS SCOPE | Extension future |
 | VPN / Azure Bastion | ⏳ HORS SCOPE | Extension future |
 | MFA / Conditional Access | ⏳ HORS SCOPE | Extension future |
+
+
+##  Nettoyage — Fin de projet
+
+Les crédits Azure Étudiant étant épuisés, l'ensemble des ressources a été supprimé à l'issue de ce projet. La suppression du Resource Group entraîne la destruction de toutes les ressources associées (VMs, VNet, NSG, disques, interfaces réseau).
+
+```bash
+az group delete --name RG-LAB-HYBRID-INFRA --yes --no-wait
+az group delete --name NetworkWatcherRG --yes --no-wait
+```
+
