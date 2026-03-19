@@ -1,107 +1,78 @@
-# **README - 01-Foundation :**
+#  README — 01-Foundation
 
-<br>
-<br>
-
-## **1. Localisation & Souveraineté**
-* ***Décision :*** Utilisation de la région belgiumcentral (Bruxelles) plutôt que westeurope.
-* ***Pourquoi :*** Pour une PME basée en Belgique, cela garantit une latence minimale et respecte la souveraineté des données (RGPD), en gardant les ressources sur le sol national. 
-
-<br>
 ---
-<br>
 
+## 1. Localisation & Souveraineté
 
-## **2. Stratégie d'Adressage**
-J'ai opté pour une approche "Zero Waste" (512 IP), équilibre idéal entre économie de ressources et capacité d'évolution.
+Le choix de la région conditionne à la fois la latence, la conformité réglementaire et la cohérence architecturale de l'ensemble du projet.
 
-* ***VNet Global (/23) :*** 512 adresses au total. C'est l'équilibre parfait entre économie de ressources et capacité d'évolution, le /24 étant moins intéressant pour ce dernier point.
+| Décision | Justification |
+|---|---|
+| Région `belgiumcentral` (Bruxelles) | Pour une PME basée en Belgique, cela garantit une latence minimale et respecte la souveraineté des données (RGPD), en maintenant les ressources sur le sol national. |
+| Rejet de `westeurope` | Bien que plus répandue, cette région ne garantit pas la résidence des données en Belgique, ce qui compromet la conformité RGPD. |
 
-* ***Segmentation Technique (/27) :*** Pour Management et Identity.
-    * *Réflexion :* Le choix du /27 sécurise l'évolution. Bien que l'infrastructure actuelle repose sur un contrôleur de domaine unique (SRV-AD-01), ce découpage permet d'accueillir immédiatement un second nœud pour la Haute Disponibilité (HA) sans reconfiguration réseau.
-
-    * *Réflexion :* La fusion des rôles AD DS et DNS sur le même hôte simplifie la résolution de noms interne, tout en garantissant une réplication native des zones via l'Active Directory.
-
-
-
-[!IMPORTANT]
-Arbitrage de Phase 2 : L'infrastructure est configurée en "HA-Ready". Suite à des instabilités d'agent Azure lors de la promotion du second nœud, la décision a été prise de maintenir un contrôleur de domaine unique (10.0.0.36) pour valider la Phase 3. Cette approche privilégie l'agilité et le respect des délais du projet (MVP - Minimum Viable Product).
-
-
-
-
-
-* ***Segmentation Métier (/24) :*** Pour le sous-réseau Data.
-    * *Réflexion :* Un bloc entier pour les départements (RH, Finance, IT, Sales) afin de garder une lisibilité parfaite (10.0.1.x) et d'accueillir des potentiels futurs collaborateurs.
-				  De plus, cela permet d’isoler le traffic de données du trafic de gestion (management).
-
-
-
-* ### 🔄 Update : Segmentation Métier Dynamique
-
-Afin de concrétiser cette réflexion, j'ai procédé à un **refactoring dynamique** du réseau via mon script `01-subnet-segmentation.sh`. L'idée est de passer d'un bloc monolithique à une isolation granulaire.
-
-#### Implémentation technique d'une micro-segmentation (CIDR /26)
-J'ai découpé le bloc initial `10.0.1.0/24` en **4 segments distincts** de 62 adresses utilisables chacun :
-
-* **Subnet-IT** (`10.0.1.0/26`) : Zone uniquement dédié au personnel IT. 
-* **Subnet-SALES** (`10.0.1.64/26`) : Isolation des flux commerciaux.
-* **Subnet-RH** (`10.0.1.128/26`) : Protection des données sensibles du personnel.
-* **Subnet-FINANCE** (`10.0.1.192/26`) : Zone critique pour les flux comptables.
-
-#### Bénéfices immédiats
-1.  **Sécurité (Zero-Trust)** : Chaque département est confiné dans son propre segment, limitant la surface d'attaque latérale en cas de compromission d'une station.
-2.  **Héritage DNS** : Grâce à l'update global du VNet, chaque nouveau subnet pointe automatiquement vers mon contrôleur de domaine `SRV-AD-01` (`10.0.0.36`) pour la résolution de noms.
-3.  **Évolutivité** : Cette structure nous permet d'appliquer des **NSG** granulaires par métier, à l'étape suivante du projet.
- 
-> [!TIP]
-> **Vérification du déploiement :** > On peut valider la création des subnets avec la commande suivante :  
-> `az network vnet subnet list -g RG-LAB-HYBRID-INFRA --vnet-name VNET-CORE -o table`
-
-
-<br>
 ---
-<br>
 
+## 2. Stratégie d'Adressage
 
-## **3. Sécurité Native & Automatisation**
-* ***Trap Error :*** Pour améliorer la fiabilité du déploiement, j'ai intégré une gestion d'erreurs via la commande trap. Cela permet d'intercepter tout échec de commande Azure CLI et de fournir un feedback immédiat, évitant ainsi un déploiement partiel ou silencieusement défaillant.
+Approche **"Zero Waste"** : un bloc de 512 IP offrant l'équilibre idéal entre économie de ressources Cloud et capacité d'évolution réelle.
 
-* ***Naming Convention :*** Utilisation de préfixes clairs (RG-, VNET-, NSG-) pour une maintenance facilitée, norme indispensable en entreprise.
+| Ressource | Nom | CIDR | Rôle |
+|---|---|---|---|
+| VNet | `VNET-CORE` | `10.0.0.0/23` | Enveloppe Globale (512 IP) |
+| Subnet Mgmt | `Subnet-Management` | `10.0.0.0/27` | Administration (Accès restreint par IP dynamique) |
+| Subnet Id | `Subnet-Identity` | `10.0.0.32/27` | Cœur Identity — HA-Ready (2 DC) |
+| Subnet IT | `Subnet-IT` | `10.0.1.0/26` | Zone dédiée aux administrateurs et outils IT |
+| Subnet SALES | `Subnet-SALES` | `10.0.1.64/26` | Isolation des flux commerciaux |
+| Subnet RH | `Subnet-RH` | `10.0.1.128/26` | Protection des données sensibles (Personnel) |
+| Subnet FINANCE | `Subnet-FINANCE` | `10.0.1.192/26` | Zone critique (Flux comptables et bancaires) |
 
-* ***Filtrage IP Dynamique :*** Utilisation de curl -s https://ifconfig.me pour injecter automatiquement mon IP publique dans le pare-feu (NSG). Le script est donc portable et sécurisé par défaut.
+**Segmentation Technique (/27)** : Le choix du /27 pour Management et Identity sécurise l'évolution. Ce découpage permet d'accueillir immédiatement un second DC pour la Haute Disponibilité sans aucune reconfiguration réseau.
 
-* ***Note sur la persistance de l'accès :*** L'adresse IP autorisée est capturée dynamiquement au moment de l'exécution du script. Pour un projet de portfolio, ce choix privilégie la sécurité Zero Trust (fermeture totale par défaut). En cas de changement de lieu ou d'adresse IP publique de l'administrateur, il suffit de ré-exécuter le script ou de mettre à jour la règle manuellement dans le portail Azure pour rétablir l'accès.
+**Fusion AD DS + DNS** : Héberger les deux rôles sur le même hôte simplifie la résolution de noms interne tout en garantissant une réplication native des zones via l'Active Directory.
 
-* ***Priorité 100 :*** J'ai assigné une priorité de 100 à la règle d'accès RDP pour garantir qu'elle soit traitée en priorité  par le NSG, avant les règles de refus par défaut d'Azure. Ce choix permet d'assurer l'accès administratif tout en gardant une plage de manœuvre pour des règles futures.
+> **Arbitrage HA — MVP** : Suite à des instabilités d'agent Azure lors de la promotion du second nœud, la décision a été prise de maintenir un contrôleur de domaine unique (`10.0.0.36`) pour valider la Phase 3. Le terrain reste préparé pour une extension HA sans reconfiguration réseau.
 
-* ***Least Privilège :*** accès RDP uniquement pour l’administrateur (moi).
+### 🔄 Refactoring — Micro-Segmentation Métier (/26)
 
+Le bloc initial `10.0.1.0/24` a été refactorisé en **4 segments distincts de 62 adresses** via le script `01-subnet-segmentation.sh`, passant d'une isolation monolithique à une granularité métier.
 
-***Note :*** *Le filtrage par IP publique sur le port 3389 constitue une première couche de défense.*
-*Pour une infrastructure d'entreprise, cette configuration serait complétée par un VPN Point-to-Site ou Azure Bastion afin de supprimer totalement l'exposition du port RDP sur Internet.*
+- **Sécurité Zero-Trust** : Chaque département est confiné dans son propre segment, limitant drastiquement la propagation latérale (*Lateral Movement*) en cas de compromission.
+- **Héritage DNS** : Grâce à l'update global du VNet, chaque nouveau subnet pointe automatiquement vers `SRV-AD-01 (10.0.0.36)` pour la résolution de noms.
+- **Évolutivité** : Cette structure permet d'appliquer des NSG granulaires par métier à l'étape suivante du projet.
 
+```bash
+# Validation de la création des subnets
+az network vnet subnet list \
+  -g RG-LAB-HYBRID-INFRA \
+  --vnet-name VNET-CORE \
+  -o table
+```
 
-
-<br>
 ---
-<br>
 
+## 3. Sécurité Native & Automatisation
 
+- **Trap Error** : Gestion d'erreurs via la commande `trap` — intercepte tout échec Azure CLI et fournit un feedback immédiat, évitant tout déploiement partiel ou silencieusement défaillant.
+- **Naming Convention** : Préfixes clairs (`RG-`, `VNET-`, `NSG-`) pour une maintenance facilitée — norme indispensable en entreprise.
+- **Filtrage IP Dynamique** : Utilisation de `curl -s https://ifconfig.me` pour injecter automatiquement l'IP publique de l'administrateur dans le NSG. Le script est portable et sécurisé par défaut.
+- **Least Privilege** : Accès RDP (port 3389) uniquement pour l'administrateur, avec priorité 100 dans le NSG pour garantir le traitement avant les règles de refus Azure.
 
-## **- Conclusion & Vision Long Terme -**
+> **Note sur la persistance de l'accès** : L'IP autorisée est capturée dynamiquement à l'exécution. En cas de changement d'adresse IP, il suffit de ré-exécuter le script ou de mettre à jour la règle manuellement dans le portail Azure.
 
-Mise en place d'un socle Zero Trust pour une infrastructure hybride. En privilégiant l'efficience opérationnelle sur le sur-dimensionnement, j'ai conçu un réseau capable de :
+> **Note Production** : Le filtrage IP sur le port 3389 constitue une première couche de défense. En entreprise, cette configuration serait complétée par un VPN Point-to-Site ou Azure Bastion pour supprimer totalement l'exposition RDP sur Internet.
 
-* ***Résister :*** * L'isolation stricte par NSG et la segmentation des rôles (IAM vs Data) limitent drastiquement la surface d'attaque.
+---
 
-* ***Évoluer :*** Le /23 laisse encore de larges plages libres pour de futurs services sans refaire le plan d'adressage, tout en évitant un gaspillage important en restant sous la norme du /16.
+## 4. Conclusion & Vision Long Terme
 
-* ***Industrialiser :*** L'usage systématique de l'automatisation (CLI) garantit un déploiement reproductible, rapide et sans erreur humaine.
+Mise en place d'un socle **Zero Trust** pour une infrastructure hybride. En privilégiant l'efficience opérationnelle sur le sur-dimensionnement, le réseau a été conçu pour :
 
-***Le But final :*** Offrir à une PME un environnement Cloud souverain, sécurisé par défaut et prêt à accueillir des services critiques comme l'AD DS.
+- **Résister** : L'isolation stricte par NSG et la segmentation des rôles (IAM vs Data) limitent drastiquement la surface d'attaque latérale.
+- **Évoluer** : Le `/23` laisse de larges plages libres pour de futurs services sans refaire le plan d'adressage, tout en restant sous la norme du /16.
+- **Industrialiser** : L'usage systématique de l'automatisation (CLI) garantit un déploiement reproductible, rapide et sans erreur humaine.
 
-
+> **But final** : Offrir à une PME un environnement Cloud souverain, sécurisé par défaut et prêt à accueillir des services critiques comme l'AD DS.
 
 
 
