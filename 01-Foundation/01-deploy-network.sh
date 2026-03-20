@@ -6,7 +6,7 @@
 # STRATEGY: Zero Trust - All inbound traffic is blocked except for Admin IP.
 # =====================================================================
 
-# --- Variables ---
+# Variables
 RG="RG-LAB-HYBRID-INFRA"
 LOC="belgiumcentral"
 VNET_NAME="VNET-CORE"
