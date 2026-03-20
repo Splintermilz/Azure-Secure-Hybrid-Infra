@@ -1,4 +1,4 @@
-# ☁️ Azure Secure Hybrid Infrastructure — PME 50-150 collaborateurs
+# ☁️  Azure Secure Hybrid Infrastructure — PME 50-150 collaborateurs
 
 ---
 
@@ -44,7 +44,7 @@ Ce projet documente le déploiement automatisé d'une infrastructure IT souverai
 
 ## Focus Stratégique
 
-### 1. 🧠 Identity (Le Cerveau) — *HA-Ready Design*
+### 1. Identity (Le Cerveau) — *HA-Ready Design*
 
 L'infrastructure repose actuellement sur un contrôleur de domaine principal (`SRV-AD-01`).
 
@@ -52,7 +52,7 @@ L'infrastructure repose actuellement sur un contrôleur de domaine principal (`S
 
 - **Services** : AD DS et DNS sont fusionnés pour une réplication native et une simplification de la résolution de noms interne.
 
-### 2. ⚙️  Data & Workstations (L'Efficience) — *Micro-Segmentation*
+### 2. Data & Workstations (L'Efficience) — *Micro-Segmentation*
 
 Le bloc initial `10.0.1.0/24` a été refactorisé en **4 segments distincts (`/26`)**.
 
@@ -63,18 +63,18 @@ Le bloc initial `10.0.1.0/24` a été refactorisé en **4 segments distincts (`/
 
 ## Roadmap de Déploiement — Sprint 15 jours
 
-### 📂 Phase 1 : Network Foundation — ✅ Terminé
+### 📂 Phase 1 : Network Foundation 
 
 - Provisionnement du VNet et refactoring de la segmentation métier (`/26`).
 - Sécurisation périmétrique via NSG (Network Security Groups) avec filtrage IP dynamique.
 
-### 📂 Phase 2 : Identity & Hybrid Management — ✅ Terminé
+### 📂 Phase 2 : Identity & Hybrid Management 
 
 - Déploiement de `SRV-AD-01` (Windows Server 2025 Core).
 - Promotion AD DS, configuration DNS et préparation du socle pour Microsoft Entra ID.
-- > ℹ️ *Design validé pour extension HA ultérieure.*
+- > *Design validé pour extension HA ultérieure.*
 
-### 📂 Phase 3 : Workstations & Hardening — 🔄 En cours
+### 📂 Phase 3 : Workstations & Hardening 
 
 - Déploiement des stations de travail par pôle métier.
 - Application de GPO (Group Policy Objects) de sécurité.
