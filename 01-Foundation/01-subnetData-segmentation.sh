@@ -6,7 +6,7 @@
 # STRATEGY: Zero Trust - Isolating department traffic at the network level.
 # ==============================================================================
 
-# --- Variables ---
+# Variables
 RG="RG-LAB-HYBRID-INFRA"
 VNET_NAME="VNET-CORE"
 
