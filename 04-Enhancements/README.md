@@ -8,7 +8,7 @@
 ### Hardening Windows
 - **Microsoft Defender for Endpoint** : augmenter le score de sécurité Windows Defender via les recommandations du portail Microsoft 365 Defender — activation de l'accès contrôlé aux dossiers, protection réseau, et réduction de la surface d'attaque (ASR rules).
 - **CIS Benchmark via GPO** : appliquer les recommandations du Center for Internet Security pour Windows Server 2025 — durcissement supplémentaire sur les audits de connexion, désactivation des protocoles legacy comme NTLMv1, etc.
-- **LAPS (Local Administrator Password Solution)** : rotation automatique des mots de passe administrateurs locaux sur chaque poste, stockée dans l'AD. Élimine le risque de mot de passe partagé entre toutes les machines.
+
 
 ### IAM
 - **MFA + Conditional Access (Entra ID)** : imposer l'authentification multi-facteurs et des politiques d'accès conditionnel (bloquer les connexions hors pays, exiger un appareil conforme, etc.).
