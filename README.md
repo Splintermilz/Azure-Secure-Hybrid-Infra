@@ -6,8 +6,8 @@
 
 | Composant | Détails |
 |-----------|---------|
-| Machine | MacBook Air (Puce M4) |
-| Mémoire | 24 Go RAM (Optimisé pour Virtualisation/Containers) |
+| Machine | MacBook Air M4 |
+| Mémoire | 24 Go RAM |
 | OS | macOS |
 | Cible | Microsoft Azure / Windows Server 2025 Core |
 
